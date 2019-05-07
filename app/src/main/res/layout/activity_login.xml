@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -21,6 +23,8 @@
             <EditText android:id="@+id/input_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
                 android:hint="Username" />
         </android.support.design.widget.TextInputLayout>
 
@@ -30,11 +34,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_password"
+
+            <EditText
+                android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Password"/>
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
+                android:hint="Password"
+                android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -44,6 +52,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
+            android:textColor="#FFFF"
             android:text="Login"
             android:onClick="handleLogin"
             />
@@ -52,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:textColor="#FFFF"
             android:text="No account yet? Create one"
             android:gravity="center"
             android:textSize="16sp"

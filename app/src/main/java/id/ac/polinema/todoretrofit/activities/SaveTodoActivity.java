@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import id.ac.polinema.todoretrofit.Constant;
 import id.ac.polinema.todoretrofit.R;
@@ -19,7 +21,6 @@ import retrofit2.Response;
 public class SaveTodoActivity extends AppCompatActivity {
 
     private EditText todoText;
-
     private TodoService service;
     private Todo todo;
     private int requestCode;
@@ -72,9 +73,14 @@ public class SaveTodoActivity extends AppCompatActivity {
             }
         });
     }
-
+    // proses update atau edit
     private void handleUpdate(View view) {
-        Call<Envelope<Todo>> updateTodo = service.updateTodo(todo);
+        int id = todo.getId();
+        todo.setTodo(todoText.getText().toString());
+        todo.setId(null);
+        todo.setUser(null);
+        todo.setDone(null);
+        Call<Envelope<Todo>> updateTodo = service.updateTodo(Integer.toString(id),todo);
         updateTodo.enqueue(new Callback<Envelope<Todo>>() {
             @Override
             public void onResponse(Call<Envelope<Todo>> call, Response<Envelope<Todo>> response) {

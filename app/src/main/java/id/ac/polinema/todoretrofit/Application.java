@@ -11,8 +11,8 @@ public class Application extends android.app.Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        session = new Session(preferences);
+		preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		session = new Session(preferences);
 	}
 
 	public static SharedPreferences providePreferences() {

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements TodoAdapter.OnTodoClickedListener {
+public class MainActivity extends AppCompatActivity implements TodoAdapter.OnTodoClickedListener, TodoAdapter.OnTodoDeleteClickedListener {
 
     private RecyclerView todosRecyclerView;
     private Session session;
@@ -44,18 +45,18 @@ public class MainActivity extends AppCompatActivity implements TodoAdapter.OnTod
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-		Toolbar toolbar = findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-		FloatingActionButton fab = findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SaveTodoActivity.class);
                 intent.putExtra(Constant.KEY_REQUEST_CODE, Constant.ADD_TODO);
                 startActivityForResult(intent, Constant.ADD_TODO);
-			}
-		});
+            }
+        });
         session = Application.provideSession();
         if (!session.isLogin()) {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements TodoAdapter.OnTod
         todosRecyclerView = findViewById(R.id.rv_todos);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         todosRecyclerView.setLayoutManager(layoutManager);
-        adapter = new TodoAdapter(this, this);
+        adapter = new TodoAdapter(this, this, this);
         todosRecyclerView.setAdapter(adapter);
         service = ServiceGenerator.createService(TodoService.class);
         loadTodos();
@@ -109,6 +110,13 @@ public class MainActivity extends AppCompatActivity implements TodoAdapter.OnTod
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_logout) {
+            session.removeSession();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }p
 
         return super.onOptionsItemSelected(item);
     }
@@ -127,5 +135,27 @@ public class MainActivity extends AppCompatActivity implements TodoAdapter.OnTod
         if (resultCode == RESULT_OK) {
             loadTodos();
         }
+    }
+
+    @Override
+    // proses delet
+    public void onDeleteClicked(Todo todo) {
+        int id = todo.getId();
+        Call<Envelope<Todo>> deleteTodo = service.deleteTodo(id);
+        deleteTodo.enqueue(new Callback<Envelope<Todo>>() {
+            @Override
+            public void onResponse(Call<Envelope<Todo>> call, Response<Envelope<Todo>> response) {
+                if (response.code() == 200) {
+                    loadTodos();
+                } else {
+                    Toast.makeText(MainActivity.this, response.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Envelope<Todo>> call, Throwable t) {
+
+            }
+        });
     }
 }
